@@ -1,0 +1,87 @@
+(version 1)
+(deny default)
+
+(define bundle-path "BUNDLE_PATH")
+(define user-homedir "USER_HOME")
+(define ping-service "PING_SERVICE_NAME")
+
+(allow signal (target self))
+
+(allow user-preference-read)
+
+(allow mach-lookup
+  ; Used for LaunchServices registration
+  (global-name "com.apple.lsd.mapdb")
+  (global-name "com.apple.cfprefsd.daemon")
+  (global-name "com.apple.cfprefsd.agent")
+  (global-name "com.apple.CoreServices.coreservicesd")
+  (global-name "com.apple.DiskArbitration.diskarbitrationd")
+
+  ; Used for keychain event and attributes access
+  (global-name "com.apple.SecurityServer")
+  (global-name "com.apple.bsd.dirhelper")
+  (global-name "com.apple.system.opendirectoryd.membership")
+
+  ; Used to check for other running instances of the app
+  (global-name (param ping-service))
+
+  ; Used for sending notifications
+  (global-name "com.apple.distributed_notifications@Uv3")
+  (global-name "com.apple.usernoted.client")
+
+  ; Used for getting modifier app info
+  (global-name "com.apple.coreservices.launchservicesd")
+
+  ; Intentionally no access to `com.apple.analyticsd` because its dumb.
+)
+
+(allow mach-register
+  ; Used to check for other running instances of the app
+  (global-name (param ping-service))
+)
+
+(allow ipc-posix-shm-read-data)
+(allow ipc-posix-shm-write-data)
+(allow ipc-posix-shm-write-create)
+
+(allow sysctl-read)
+
+; Reads from /usr.
+(allow file-read*
+  (subpath "/usr/share/icu")
+)
+
+; Allow realpath() to work.
+(allow file-read-metadata (subpath "/"))
+
+; Allow reading our own bundle contents :D
+(allow file-read* (subpath (param bundle-path)))
+
+; Allow reads of system libraries and frameworks.
+(allow file-read*
+  (subpath "/System/Library/CoreServices")
+  (subpath "/System/Library/Frameworks")
+  (subpath "/System/Library/Preferences/Logging")
+  (subpath "/System/Library/PrivateFrameworks")
+  (subpath "/System/Library/Security")
+  (subpath "/usr/lib")
+)
+
+; Reads from /Library.
+(allow file-read-data
+  (subpath "/Library/Preferences/Logging")
+)
+
+; Reads from the system's keychains
+; Used for correctly receiving/detecting events
+(allow file-read-data
+    (subpath "/Libary/Keychains")
+    (subpath (string-append (param user-homedir) "/Library/Keychains"))
+)
+
+; Access Security.framework MDS.
+; Used for registering keychain callbacks and getting item attributres.
+(allow file*
+  (subpath "/private/var/db/mds")
+  (regex #"/private/var/folders/.*/mds/")
+)
