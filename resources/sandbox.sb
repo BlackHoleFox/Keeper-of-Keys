@@ -3,7 +3,11 @@
 
 (define bundle-path "BUNDLE_PATH")
 (define user-homedir "USER_HOME")
+(define datadir "DATA_DIR")
 (define ping-service "PING_SERVICE_NAME")
+
+(define config-dir
+  (string-append (param user-homedir) "/.config"))
 
 (allow signal (target self))
 
@@ -57,6 +61,14 @@
 ; Allow reading our own bundle contents :D
 (allow file-read* (subpath (param bundle-path)))
 
+; Allow reading ~/Library/Containers/<bundleid>/Data which is just for this app
+(allow file-read* (subpath (param datadir)))
+
+; Read metadata about ~/.config
+(allow file-read-metadata (subpath config-dir))
+; Do anything inside the app's own ~/.config subdirectory.
+(allow file* (subpath (string-append config-dir "/keeper_of_keys")))
+
 ; Allow reads of system libraries and frameworks.
 (allow file-read*
   (subpath "/System/Library/CoreServices")
@@ -75,7 +87,7 @@
 ; Reads from the system's keychains
 ; Used for correctly receiving/detecting events
 (allow file-read-data
-    (subpath "/Libary/Keychains")
+    (subpath "/Library/Keychains")
     (subpath (string-append (param user-homedir) "/Library/Keychains"))
 )
 

@@ -14,6 +14,8 @@ use objc_id::Id;
 use std::{ffi::OsStr, fs, path::Path, ptr::NonNull, thread, time::Duration};
 
 mod bindings;
+mod config;
+use config::Config;
 mod events;
 use events::{EventData, EventDetails, FilteredEventData};
 
@@ -64,8 +66,10 @@ fn main() -> Result<(), ()> {
             .unwrap()
     };
 
+    let data_home = home.join(formatcp!("Library/Containers/{BUNDLE_ID}/Data"));
+
     let file_log_spec = {
-        let log_dir = home.join(formatcp!("Library/Containers/{BUNDLE_ID}/Data/Logs"));
+        let log_dir = data_home.join("Logs");
 
         flexi_logger::FileSpec::default()
             .directory(log_dir)
@@ -81,6 +85,7 @@ fn main() -> Result<(), ()> {
             flexi_logger::Cleanup::KeepLogFiles(10),
         );
 
+    // Not sandboxed. Writing to this works since handles opened before self-wrapping in the sandbox are still valid.
     let _logger_handle = logger.start().expect("failed to start logger");
 
     log::info!("initializing");
@@ -88,9 +93,13 @@ fn main() -> Result<(), ()> {
     let mut args = std::env::args().skip(1);
 
     match args.next() {
-        Some(arg) if arg == "monitor" => sandbox::init_sandbox(&home, SERVICE_NAME),
+        Some(arg) if arg == "monitor" => sandbox::init_sandbox(&home, &data_home, SERVICE_NAME),
         _ => return register_service(&home),
     };
+
+    let config = Config::read_from_dir(&data_home);
+
+    Config::setup_home_link(&data_home, &home);
 
     // LEAK NOTE: 1 (16 bytes) ROOT LEAK: <NSArray 0x600002a80360> [16]
     mac_notification_sys::set_application(BUNDLE_ID).unwrap();
@@ -168,7 +177,18 @@ fn main() -> Result<(), ()> {
             original_event.assume_filtered()
         };
 
-        let subtitle = format!("Item: {}", ev.item_title().unwrap_or("Unknown"));
+        let item_title = ev.item_title().unwrap_or("Unknown");
+
+        if config
+            .ignored_items
+            .iter()
+            .any(|ignored| ignored == item_title)
+        {
+            log::debug!("skipping change, it had an ignored item title");
+            continue;
+        }
+
+        let subtitle = format!("Item: {}", item_title);
         log::debug!("sending notification about {}", subtitle);
 
         let mut builder = mac_notification_sys::Notification::new();

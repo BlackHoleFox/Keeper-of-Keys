@@ -1,12 +1,15 @@
 use std::{ffi::CStr, os::unix::prelude::OsStrExt, path::Path, ptr};
 
-pub fn init_sandbox(home: &Path, service_name: &'static str) {
+pub fn init_sandbox(home: &Path, data_dir: &Path, service_name: &'static str) {
     log::debug!("wrapping sandbox...");
 
     static PROFILE: &str = concat!(include_str!("../resources/sandbox.sb"), "\0");
 
     let mut home_dir = home.as_os_str().as_bytes().to_vec();
     home_dir.push(0);
+
+    let mut data_dir = data_dir.as_os_str().as_bytes().to_vec();
+    data_dir.push(0);
 
     let exe_location = std::env::current_exe().unwrap();
     let exe_parent = exe_location.parent().unwrap().parent().unwrap();
@@ -34,6 +37,8 @@ pub fn init_sandbox(home: &Path, service_name: &'static str) {
         bundle_dir.as_ptr().cast(),
         b"USER_HOME\0".as_ptr().cast(),
         home_dir.as_ptr().cast(),
+        b"DATA_DIR\0".as_ptr().cast(),
+        data_dir.as_ptr().cast(),
         b"PING_SERVICE_NAME\0".as_ptr().cast(),
         service_name.as_ptr().cast(),
         ptr::null(),

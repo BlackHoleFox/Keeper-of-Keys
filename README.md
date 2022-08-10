@@ -62,7 +62,7 @@ try setting [`RUST_LOG`](https://docs.rs/flexi_logger/latest/flexi_logger/struct
 
 This can be set in a terminal if running from one, but can also be configured in the `launchd` agent. Simply open `~/Library/LaunchAgents/org.blackholefox.keeperofkeys.plist` in a text editor and add this snippet inside the top-level dictionary:
 
-```plist
+```xml
 <key>EnvironmentVariables</key>
 <dict>
 	<key>RUST_LOG</key>

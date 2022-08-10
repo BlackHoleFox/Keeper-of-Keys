@@ -1,6 +1,6 @@
 [package]
 name = "keeper_of_keys"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 description = "A watcher for all your keychains"
@@ -23,6 +23,8 @@ objc_id = "0.1"
 mac-notification-sys = { git = "https://github.com/BlackHoleFox/mac-notification-sys.git", branch = "fix-leak-faucet" }
 # mac-notification-sys = "0.5"
 embed_plist = "1.2"
+toml = { version = "0.5", default-features = false }
+serde = { version = "1", default-features = false, features = ["derive"] }
 
 const_format = "0.2"
 

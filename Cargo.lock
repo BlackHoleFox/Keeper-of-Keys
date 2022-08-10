@@ -179,7 +179,7 @@ checksum = "112c678d4050afce233f4f2852bb2eb519230b3cf12f33585275537d7e41578d"
 
 [[package]]
 name = "keeper_of_keys"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "atty",
  "bitflags",
@@ -196,6 +196,8 @@ dependencies = [
  "objc_id",
  "security-framework",
  "security-framework-sys",
+ "serde",
+ "toml",
 ]
 
 [[package]]
@@ -221,8 +223,8 @@ dependencies = [
 
 [[package]]
 name = "mac-notification-sys"
-version = "0.5.2"
-source = "git+https://github.com/BlackHoleFox/mac-notification-sys.git?branch=fix-leak-faucet#9125aa0144457074efa6fc8872ab9c6e4a592021"
+version = "0.5.6"
+source = "git+https://github.com/BlackHoleFox/mac-notification-sys.git?branch=fix-leak-faucet#7733aeb2620789c0fde85ebd792a45cd8c2124be"
 dependencies = [
  "cc",
  "dirs-next",
@@ -346,6 +348,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde"
+version = "1.0.142"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e590c437916fb6b221e1d00df6e3294f3fccd70ca7e92541c475d6ed6ef5fee2"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.142"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34b5b8d809babe02f538c2cfec6f2c1ed10804c0e5a6a041a049a4f5588ccc2e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "syn"
 version = "1.0.96"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -393,6 +415,15 @@ name = "time-macros"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42657b1a6f4d817cda8e7a0ace261fe0cc946cf3a80314390b22cc61ae080792"
+
+[[package]]
+name = "toml"
+version = "0.5.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d82e1a7758622a465f8cee077614c73484dac5b836c02ff6a40d5d1010324d7"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "unicode-ident"
