@@ -34,7 +34,7 @@ flexi_logger = { version = "0.22", default-features = false, features = ["colors
 [package.metadata.bundle]
 name = "Keeper of Keys"
 identifier = "org.blackholefox.keeperofkeys"
-icon = ["./resources/icon.png"]
+icon = ["./resources/icon.icns"]
 
 [profile.release]
 lto = true

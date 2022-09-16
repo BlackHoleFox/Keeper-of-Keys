@@ -1,4 +1,4 @@
-# Keeper of Keys: Looking out for your keychains
+# Keeper of Keys: Looking out for your keychains !["Keeper of Keys app icon"](./media/icon.png)
 
 [![CI Status](https://github.com/BlackHoleFox/Keeper-of-Keys/workflows/CI/badge.svg)](https://github.com/BlackHoleFox/Keeper-of-Keys/actions)
 
@@ -77,3 +77,10 @@ This can be set in a terminal if running from one, but can also be configured in
 Discord:
 
 !["A screenshot of a notification that Discord can generate"](./media/example_notification_2.png)
+
+## Credits
+
+Keeper of Keys' icon was created by [Daniela Kisner](https://www.behance.net/flaresphere/projects).
+
+## License
+This project is licensed under the Apache 2.0 license, or the MIT license, at your chosing, with the exception of the project's iconography.
