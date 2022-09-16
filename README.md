@@ -1,5 +1,7 @@
 # Keeper of Keys: Looking out for your keychains
 
+[![CI Status](https://github.com/BlackHoleFox/Keeper-of-Keys/workflows/CI/badge.svg)](https://github.com/BlackHoleFox/Keeper-of-Keys/actions)
+
 This is a small app for macOS which keeps an eye on your computer's keychains, reporting when a process touches an item inside one. Inspired by [BlockBlock](https://objective-see.org/products/blockblock.html), which does a similar thing monitoring for persistent software registrations.
 
 !["A screenshot of a notification the app generates"](./media/example_notification.png)
